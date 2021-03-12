@@ -15,31 +15,36 @@ class AdjList extends Map {
     bfs(startID, findID) {
         let visited = new Map();
         let queue = [];
+        //push the start vertex
         queue.push([startID, ""]);
+        //while the queue has items
         while (queue.length > 0) {
-            //pop off queue
+            //dequeue last item
             let queuedItem = queue.pop();
-            //get current and last if they exist
+            //get currentIndex and lastIndex if they exist
             let current, last;
             if (queuedItem) {
                 [current, last] = queuedItem;
             }
+            //if the desired vertex is found print the path
             if (current == findID) {
-                let tree = [current];
+                let path = [current];
                 while (last != '') {
-                    tree.unshift(last);
+                    path.unshift(last);
                     last = visited.get(last);
                 }
-                return tree;
+                return { length: path.length, path: path };
             }
-            if (!visited.has(current)) {
-                for (let edge of this.get(current).edges) {
+            //for each of the edges in this iteration
+            for (let edge of this.get(current).edges) {
+                //if the edge is not visited and the edge is not queued queue
+                if (!visited.has(edge) && !queue.some(item => item[0] === edge)) {
                     queue.push([edge, current]);
                 }
-                visited.set(current, last);
             }
+            visited.set(current, last);
         }
-        return [];
+        return { length: 0 };
     }
 }
 exports.AdjList = AdjList;
