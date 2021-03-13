@@ -29,4 +29,4 @@ AdjList.vertexFactory(list1,vertices);
 AdjList.edgeFactory(list1, edges);
 
 console.log(list1);
-console.log(list1.bfs("D", "H"));
+console.log(list1.dfs("A", "H"));

@@ -36,9 +36,7 @@ class AdjList extends Map {
             let queuedItem = queue.pop();
             //get currentIndex and lastIndex if they exist
             let current, last;
-            if (queuedItem) {
-                [current, last] = queuedItem;
-            }
+            [current, last] = queuedItem;
             //if the desired vertex is found print the path
             if (current == findID) {
                 let path = [current];
@@ -52,7 +50,39 @@ class AdjList extends Map {
             for (let edge of this.get(current).edges) {
                 //if the edge is not visited and the edge is not queued queue
                 if (!visited.has(edge) && !queue.some(item => item[0] === edge)) {
-                    queue.push([edge, current]);
+                    queue.unshift([edge, current]);
+                }
+            }
+            visited.set(current, last);
+        }
+        return { length: 0 };
+    }
+    dfs(startID, findID) {
+        let visited = new Map();
+        let stack = [];
+        //push the start vertex
+        stack.push([startID, ""]);
+        //while the queue has items
+        while (stack.length > 0) {
+            //dequeue last item
+            let stackedItem = stack.pop();
+            //get currentIndex and lastIndex if they exist
+            let current, last;
+            [current, last] = stackedItem;
+            //if the desired vertex is found print the path
+            if (current == findID) {
+                let path = [current];
+                while (last != '') {
+                    path.unshift(last);
+                    last = visited.get(last);
+                }
+                return { length: path.length, path: path };
+            }
+            //for each of the edges in this iteration
+            for (let edge of this.get(current).edges) {
+                //if the edge is not visited and the edge is not queued queue
+                if (!visited.has(edge) && !stack.some(item => item[0] === edge)) {
+                    stack.push([edge, current]);
                 }
             }
             visited.set(current, last);
